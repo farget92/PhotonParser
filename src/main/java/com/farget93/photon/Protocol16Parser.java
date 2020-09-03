@@ -1,5 +1,9 @@
 package com.farget93.photon;
 
+import com.farget93.photon.events.ReceivedEvent;
+import com.farget93.photon.events.RequestEvent;
+import com.farget93.photon.events.ResponseEvent;
+
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
@@ -18,7 +22,9 @@ public class Protocol16Parser {
     protected Map<Integer, BiConsumer<ByteBuffer, Integer>> commandTypeAction = new HashMap<>();
     protected Map<Integer, Consumer<ByteBuffer>> messageTypeAction = new HashMap<>();
 
-
+    protected Consumer<RequestEvent> onRequest = (event) -> {};
+    protected Consumer<ResponseEvent> onResponse = (event) -> {};
+    protected Consumer<ReceivedEvent> onReceive = (event) -> {};
 
     public Protocol16Parser(){
         initializeActions();
@@ -43,13 +49,16 @@ public class Protocol16Parser {
         });
 
         messageTypeAction.put(Protocol16Util.MessageType.OPERATION_REQUEST.getValue(), (buffer) -> {
-
+            RequestEvent event = Protocol16.deserializeOperationRequest(buffer);
+            onRequest.accept(event);
         });
         messageTypeAction.put(Protocol16Util.MessageType.OPERATION_RESPONSE.getValue(), (buffer) -> {
-
+            ResponseEvent event = Protocol16.deserializeOperationResponse(buffer);
+            onResponse.accept(event);
         });
         messageTypeAction.put(Protocol16Util.MessageType.EVENT.getValue(), (buffer) -> {
-
+            ReceivedEvent event = Protocol16.deserializeEventData(buffer);
+            onReceive.accept(event);
         });
     }
 
