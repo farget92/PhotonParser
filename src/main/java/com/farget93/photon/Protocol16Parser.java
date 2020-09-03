@@ -18,6 +18,8 @@ public class Protocol16Parser {
     protected Map<Integer, BiConsumer<ByteBuffer, Integer>> commandTypeAction = new HashMap<>();
     protected Map<Integer, Consumer<ByteBuffer>> messageTypeAction = new HashMap<>();
 
+
+
     public Protocol16Parser(){
         initializeActions();
     }
