@@ -25,11 +25,15 @@ public abstract class ProtocolSerializer implements Serializer<ProtocolResult>{
         return serializerMap.get(type).deserialize(buffer, this, args);
     }
 
-    public static class ProtocolBase{
+    public void setValueToMapContainer(ProtocolMapContainer protocolContainer, String key, Object value){
+        protocolContainer.setValue(key, value);
+    }
+
+    public static class ProtocolMapContainer {
 
         private final Map<String, Object> values;
 
-        protected ProtocolBase(){
+        protected ProtocolMapContainer(){
             this.values = new HashMap<>();
         }
 
@@ -37,7 +41,7 @@ public abstract class ProtocolSerializer implements Serializer<ProtocolResult>{
             return this.values.get(key);
         }
 
-        public void setValue(String key, Object value){
+        private void setValue(String key, Object value){
             this.values.put(key, value);
         }
     }

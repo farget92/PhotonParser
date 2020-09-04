@@ -1,5 +1,8 @@
 package com.farget93.photon.protocol;
 
+import com.farget93.photon.protocol.parts.ProtocolBody;
+import com.farget93.photon.protocol.parts.ProtocolHeader;
+
 public class ProtocolResult {
 
     private final ProtocolHeader protocolHeader;
