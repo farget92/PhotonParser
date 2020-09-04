@@ -67,7 +67,7 @@ public class Protocol16Parser {
     }
 
     protected void parseHeader(ByteBuffer buffer){
-        if(buffer.remaining() < HEADER_LENGTH)
+        /*if(buffer.remaining() < HEADER_LENGTH)
             throw new BufferUnderflowException();
 
         short peerID = buffer.getShort();
@@ -81,28 +81,13 @@ public class Protocol16Parser {
 
         if(flag == HEADER_FLAG_CRC){
             /* */
-        }
-
+       // }
+/*
         for(int i = 0; i < commandCount; i++)
-            parseCommand(buffer);
+            parseCommand(buffer);*/
     }
 
-    protected void parseCommand(ByteBuffer buffer){
-        int commandType = buffer.get() & 0xFF;
-        int channelID = buffer.get() & 0xFF;
-        int commandFlags = buffer.get() & 0xFF;
 
-        buffer.position(buffer.position() + 1);
-        int commandLength = buffer.getInt();
-        int sequenceNumber = buffer.getInt();
-
-        commandLength -= COMMAND_HEADER_LENGTH;
-
-        BiConsumer<ByteBuffer, Integer> commandAction = commandTypeAction.getOrDefault(commandType, (innerBuffer, innerCommandLength) -> {
-            buffer.position(buffer.position() + innerCommandLength);
-        });
-        commandAction.accept(buffer, commandLength);
-    }
 
     protected void processReliableMessage(ByteBuffer buffer, int commandLength){
         buffer.position(buffer.position() + 1);

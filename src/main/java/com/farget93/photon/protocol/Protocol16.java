@@ -6,7 +6,15 @@ import com.farget93.photon.events.ResponseEvent;
 
 import java.nio.ByteBuffer;
 
-public class Protocol16 implements Protocol {
+public class Protocol16 extends Protocol {
+
+    public static final int HEADER_LENGTH = 12;
+    public static final int HEADER_FLAG_ENCRYPTED = 1;
+    public static final int HEADER_FLAG_CRC = 204;
+
+    public static final int COMMAND_HEADER_LENGTH = 12;
+
+
 
     @Override
     public RequestEvent deserializeOperationRequest(ByteBuffer buffer) {

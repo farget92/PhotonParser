@@ -6,18 +6,20 @@ import com.farget93.photon.events.ResponseEvent;
 
 import java.nio.ByteBuffer;
 
-public interface Protocol {
+public abstract class Protocol {
 
-    RequestEvent deserializeOperationRequest(ByteBuffer buffer);
+    // serializers
 
-    ResponseEvent deserializeOperationResponse(ByteBuffer buffer);
+    public abstract RequestEvent deserializeOperationRequest(ByteBuffer buffer);
 
-    ReceivedEvent deserializeEventData (ByteBuffer buffer, ReceivedEvent target);
+    public abstract ResponseEvent deserializeOperationResponse(ByteBuffer buffer);
 
-    Object deserialize (ByteBuffer buffer, byte type);
+    public abstract ReceivedEvent deserializeEventData (ByteBuffer buffer, ReceivedEvent target);
 
-    byte deserializeByte(ByteBuffer buffer);
+    public abstract Object deserialize (ByteBuffer buffer, byte type);
 
-    short deserializeShort(ByteBuffer buffer);
+    public abstract byte deserializeByte(ByteBuffer buffer);
+
+    public abstract short deserializeShort(ByteBuffer buffer);
 
 }
