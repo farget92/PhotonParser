@@ -3,6 +3,7 @@ package com.farget93.photon;
 import com.farget93.photon.events.ReceivedEvent;
 import com.farget93.photon.events.RequestEvent;
 import com.farget93.photon.events.ResponseEvent;
+import com.farget93.photon.protocol.Protocol16;
 
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
@@ -26,7 +27,10 @@ public class Protocol16Parser {
     protected Consumer<ResponseEvent> onResponse = (event) -> {};
     protected Consumer<ReceivedEvent> onReceive = (event) -> {};
 
+    protected final Protocol16 protocol16;
+
     public Protocol16Parser(){
+        this.protocol16 = new Protocol16();
         initializeActions();
     }
 
@@ -49,15 +53,15 @@ public class Protocol16Parser {
         });
 
         messageTypeAction.put(Protocol16Util.MessageType.OPERATION_REQUEST.getValue(), (buffer) -> {
-            RequestEvent event = Protocol16.deserializeOperationRequest(buffer);
+            RequestEvent event = protocol16.deserializeOperationRequest(buffer);
             onRequest.accept(event);
         });
         messageTypeAction.put(Protocol16Util.MessageType.OPERATION_RESPONSE.getValue(), (buffer) -> {
-            ResponseEvent event = Protocol16.deserializeOperationResponse(buffer);
+            ResponseEvent event = protocol16.deserializeOperationResponse(buffer);
             onResponse.accept(event);
         });
         messageTypeAction.put(Protocol16Util.MessageType.EVENT.getValue(), (buffer) -> {
-            ReceivedEvent event = Protocol16.deserializeEventData(buffer);
+            ReceivedEvent event = protocol16.deserializeEventData(buffer, null);
             onReceive.accept(event);
         });
     }
