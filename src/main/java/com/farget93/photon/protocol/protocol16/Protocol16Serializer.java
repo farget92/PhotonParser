@@ -10,7 +10,8 @@ import com.farget93.photon.serializer.Serializer;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 
-public class Protocol16Serializer extends ProtocolSerializer{
+// Do Protocol16Result -> Change return system.
+public class Protocol16Serializer extends ProtocolSerializer<ProtocolResult>{
 
     public Protocol16Serializer(){
         super.registerSerializer(Protocol16HeaderSerializer.class, new Protocol16HeaderSerializer());
@@ -72,7 +73,7 @@ public class Protocol16Serializer extends ProtocolSerializer{
             int commandCount = ((byte) args[0]) & 0xFF;
             for(int i = 0; i < commandCount; i++){
                 ProtocolCommand protocolCommand = (ProtocolCommand) protocolSerializer.deserialize(buffer, Protocol16CommandSerializer.class);
-                //if(!((boolean) protocolCommand.getValue("isPartial"))) -> change to commandType enum
+                //if(protocolCommand.getValue("commandType"))
                 //    protocolSerializer.setValueToMapContainer(protocolBody, Integer.toString(i),protocolCommand);
             }
 
@@ -82,12 +83,29 @@ public class Protocol16Serializer extends ProtocolSerializer{
 
     protected static class Protocol16CommandSerializer implements Serializer<ProtocolCommand>{
 
+        public static final int HEADER_LENGTH = 12;
+
         @Override
         public ProtocolCommand deserialize(ByteBuffer buffer, ProtocolSerializer protocolSerializer, Object... args) throws ProtocolParserException {
-            ProtocolCommand x;
+            if(buffer.remaining() < HEADER_LENGTH)
+                throw new ProtocolParserException("Command header is too short", new BufferUnderflowException());
 
-            System.out.println("XX");
-            
+            ProtocolCommand protocolCommand = new ProtocolCommand();
+
+            byte commandType = buffer.get();
+            protocolSerializer.setValueToMapContainer(protocolCommand, "commandType", commandType);
+
+            byte channelID = buffer.get();
+            protocolSerializer.setValueToMapContainer(protocolCommand, "channelID", channelID);
+
+            byte commandFlags = buffer.get();
+            protocolSerializer.setValueToMapContainer(protocolCommand, "commandFlags", commandFlags);
+
+            buffer.position(buffer.position() + 1); // Unknown usage of skipped byte
+
+
+
+
             return null;
         }
     }

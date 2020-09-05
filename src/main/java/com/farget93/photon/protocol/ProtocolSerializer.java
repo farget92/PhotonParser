@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class ProtocolSerializer implements Serializer<ProtocolResult>{
+public abstract class ProtocolSerializer<T> implements Serializer<T>{
 
     protected Map<Class<?>, Serializer> serializerMap;
 
